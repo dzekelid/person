@@ -3,10 +3,9 @@ swagger: "2.0"
 x-collection-name: Google Plus
 x-complete: 0
 info:
-  title: Google Plus Get Person
+  title: Google Plus Get Person Profile
   version: 1.0.0
-  description: Get a person's profile. If your app uses scope https://www.googleapis.com/auth/plus.login,
-    this method is guaranteed to return ageRange and language.
+  description: Get a person's profile.
 schemes:
 - http
 produces:
@@ -16,10 +15,10 @@ consumes:
 paths:
   /activities/{activityId}/people/{collection}:
     get:
-      summary: Get Activity People
+      summary: Get People In Collection
       description: List all of the people in the specified collection for a particular
         activity.
-      operationId: plus.people.listByActivity
+      operationId: plusDomains.people.listByActivity
       x-api-path-slug: activitiesactivityidpeoplecollection-get
       parameters:
       - in: path
@@ -70,15 +69,87 @@ paths:
       - Person
   /people/{userId}:
     get:
-      summary: Get Person
-      description: Get a person's profile. If your app uses scope https://www.googleapis.com/auth/plus.login,
-        this method is guaranteed to return ageRange and language.
-      operationId: plus.people.get
+      summary: Get Person Profile
+      description: Get a person's profile.
+      operationId: plusDomains.people.get
       x-api-path-slug: peopleuserid-get
       parameters:
       - in: path
         name: userId
         description: The ID of the person to get the profile for
+      responses:
+        200:
+          description: OK
+      tags:
+      - Person
+  /people/{userId}/people/{collection}:
+    get:
+      summary: Get Collection of People
+      description: List all of the people in the specified collection.
+      operationId: plus.people.list
+      x-api-path-slug: peopleuseridpeoplecollection-get
+      parameters:
+      - in: path
+        name: collection
+        description: The collection of people to list
+      - in: query
+        name: maxResults
+        description: The maximum number of people to include in the response, which
+          is used for paging
+      - in: query
+        name: orderBy
+        description: The order to return people in
+      - in: query
+        name: pageToken
+        description: The continuation token, which is used to page through large result
+          sets
+      - in: path
+        name: userId
+        description: Get the collection of people for the person identified
+      responses:
+        200:
+          description: OK
+      tags:
+      - Person
+  /circles/{circleId}/people:
+    get:
+      summary: Get People in Circle
+      description: List all of the people who are members of a circle.
+      operationId: plusDomains.people.listByCircle
+      x-api-path-slug: circlescircleidpeople-get
+      parameters:
+      - in: path
+        name: circleId
+        description: The ID of the circle to get the members of
+      - in: query
+        name: maxResults
+        description: The maximum number of people to include in the response, which
+          is used for paging
+      - in: query
+        name: pageToken
+        description: The continuation token, which is used to page through large result
+          sets
+      responses:
+        200:
+          description: OK
+      tags:
+      - Person
+    put:
+      summary: Update People in Circle
+      description: Add a person to a circle. Google+ limits certain circle operations,
+        including the number of circle adds. Learn More.
+      operationId: plusDomains.circles.addPeople
+      x-api-path-slug: circlescircleidpeople-put
+      parameters:
+      - in: path
+        name: circleId
+        description: The ID of the circle to add the person to
+      - in: query
+        name: email
+        description: Email of the people to add to the circle
+      - in: query
+        name: userId
+        description: IDs of the people to add to the circle
       responses:
         200:
           description: OK
